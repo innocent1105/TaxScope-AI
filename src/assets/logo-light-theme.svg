@@ -1,0 +1,11 @@
+<svg width="100%" height="300" className="" viewBox="90 10 300 90" xmlns="http://www.w3.org/2000/svg">
+  <!-- Logo Part -->
+  <rect x="30" y="20" width="15" height="40" rx="7.5" transform="rotate(30 20 10)" fill="#333" />
+  <rect x="50" y="10" width="15" height="80" rx="7.5" transform="rotate(30 40 10)" fill="#333" />
+  <rect x="70" y="30" width="15" height="40" rx="7.5" transform="rotate(30 60 10)" fill="#333" />
+
+  <!-- Text Part -->
+  <text x="110" y="60" font-family="Segoe UI, Roboto, sans-serif" font-size="42" fill="#333">
+    Precision AI
+  </text>
+</svg>
