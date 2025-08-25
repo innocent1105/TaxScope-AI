@@ -16,8 +16,11 @@ const useSystemAuth = () => {
           console.warn("No user logged in. Redirecting to login...");
           navigate("/login");
         } else {
-          console.log("Authenticated user:", users[0]);
+        
+          localStorage.setItem("user_id", users[0].user_id);
         }
+
+        return users;
       } catch (error) {
         console.error("Auth check failed:", error);
         navigate("/login");

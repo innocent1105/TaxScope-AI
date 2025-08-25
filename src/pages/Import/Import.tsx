@@ -61,7 +61,7 @@ const ImportData = () => {
 	const handleSaveToIndexedDB = async () => {
         setTraining(true)
 
-        const import_id = Math.floor(Math.random() * 170);
+        const import_id = Math.floor(Math.random() * 1700);
 
         localStorage.setItem('import_id', import_id);
 
@@ -70,12 +70,20 @@ const ImportData = () => {
             data : excelData
         });
 
-        await db.collection('process_data').add({
-            import_id : import_id,
-            data : processedData
-        });
+        const delete_ = await db.collection('process_data').delete();
+
+        console.log("delete_ ", delete_)
+
+        if(delete_.success){
+            await db.collection('process_data').add({
+                import_id : import_id,
+                data : processedData
+            });
+            
+            navigate('/project-settings');
+        }
+
         
-        navigate('/project-settings');
 	};
 
 	return (

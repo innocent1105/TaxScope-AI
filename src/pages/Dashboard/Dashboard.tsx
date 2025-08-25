@@ -1,3 +1,5 @@
+import useSystemAuth from '../Auth/FrontendAuth'
+
 import PageHeader from '@/components/navigation/page-header';
 import MetricsCard from '@/components/dashboard/metrics-card';
 import BarChartComponent from '@/components/dashboard/bar-chart-component';
@@ -9,9 +11,9 @@ import SubscriptionOverviewCard from '@/components/dashboard/subscription-overvi
 import CreditScoreCard from '@/components/dashboard/credit-score-chart';
 import { useNavigate } from "react-router-dom";
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Localbase from 'localbase';
-import useSystemAuth from '../Auth/FrontendAuth'
+import axios from 'axios';
 
 
 
@@ -20,16 +22,41 @@ import useSystemAuth from '../Auth/FrontendAuth'
 
 
 const Dashboard = () => {
-	useSystemAuth();
+	const user_id = localStorage.getItem("user_id");
 	
-
+	const [noProject, setNoProject] = useState(true);
+	const BASE_URL = "http://localhost/precision-v2/UI-DESIGN/backend/";
 	const db = new Localbase('precisionDB');
 	const navigate = useNavigate();
 
 	
-	
+	useEffect(() =>{
+		if(!noProject){
+			navigate("/import-excel-data");
+		}
+	}, [noProject])
+
+	useEffect(() => {
+		async function getUserData(){
+			const res = await axios.post(`${BASE_URL}user_data.php`, { data: {  user_id : user_id } });
+
+			console.log(res.data)
+			if(res.data.active_project != "none"){
+				setNoProject(true);
+			}else{
+				setNoProject(false);
+			}
+		}
+
+		getUserData();
+	}, []);
+
+	const [summary, setSummary] = useState("Hello there");
 
 
+	const openAIChat = () =>{
+		navigate("/precision");
+	}
 	
 	return (
 		<>
@@ -45,9 +72,43 @@ const Dashboard = () => {
 			</div>
 
 			
-			<CardWrapper className="col-span-1 lg:col-span-4" title="Overall Revenue">
-				<AreaChartComponent />
+			<CardWrapper className=" " title="Overall Revenue">
+				<div className=' w-full flex flex-row gap-2'>
+					<div className=' w-full h-94'>
+						<AreaChartComponent />
+					</div>
+					<div className="w-6/12 p-2">
+						<div className="flex flex-col justify-between h-full  p-6 rounded-2xl border border-sidebar-accent ">
+							
+					
+							<div className="flex items-center gap-2">
+							<div className="w-8 h-8 bg-accent rounded-lg"></div>
+							<div className=" text-accent-foreground font-semibold text-lg">
+								Precision AI
+							</div>
+							</div>
+
+
+							<div className="mt-4 space-y-2">
+							<p className="text-accent-foreground text-sm leading-relaxed">
+								{summary}
+							</p>
+							
+							</div>
+
+
+							<div className="flex justify-end mt-4">
+							<button onClick={()=> openAIChat()} className="px-4 py-2 text-white text-sm font-medium rounded-lg bg-gradient-to-r from-blue-500 to-purple-200 hover:from-blue-600 hover:to-blue-400 cursor-pointer transition-all duration-300 active:scale-95">
+								Open chat
+							</button>
+							</div>
+
+						</div>
+						</div>
+
+				</div>
 			</CardWrapper>
+
 
 			<div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
 				<CardWrapper className="col-span-1 lg:col-span-4" title="Monthly Target">
